@@ -22,6 +22,8 @@ public interface AttendanceMapper {
 //            """)
     //after adding method getfullname in employee entity
     @Mapping(target = "employeeName", source = "employee.fullName")
+    @Mapping(target = "checkInTime", expression = "java(attendance.getCheckIn() != null ? java.time.LocalDateTime.of(attendance.getDate(), attendance.getCheckIn()) : null)")
+    @Mapping(target = "checkOutTime", expression = "java(attendance.getCheckOut() != null ? java.time.LocalDateTime.of(attendance.getDate(), attendance.getCheckOut()) : null)")
     AttendanceResponse toDtoResponse(Attendance attendance);
 
     List<AttendanceResponse> toResponseList(List<Attendance> attendanceList);
