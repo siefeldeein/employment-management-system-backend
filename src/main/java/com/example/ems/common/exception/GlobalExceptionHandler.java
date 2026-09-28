@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     // 400 - Invalid Input
     @ExceptionHandler(InvalidInputException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidInput(DuplicateResourceException ex, HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> handleInvalidInput(InvalidInputException ex, HttpServletRequest request){
 
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request, null);
     }

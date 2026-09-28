@@ -14,6 +14,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -33,6 +34,7 @@ public class DataSeeder implements CommandLineRunner {
             List<Department> departments = seedRolesAndDepartments();
             List<Employee> employees = seedEmployees(departments);
             seedAttendance(employees);
+            backfillAbsent(employees);
             return;
         }
         // Roles already exist (existing/local DB): top up demo attendance
@@ -41,7 +43,11 @@ public class DataSeeder implements CommandLineRunner {
             List<Employee> employees = employeeRepository.findAll();
             if (!employees.isEmpty()) {
                 seedAttendance(employees);
+                backfillAbsent(employees);
             }
+        } else {
+            // Ensure past weekdays without a check-in are marked ABSENT.
+            backfillAbsent(employeeRepository.findAll());
         }
     }
 
@@ -113,6 +119,33 @@ public class DataSeeder implements CommandLineRunner {
                 attendance.setCheckOut(LocalTime.of(17, 30));
                 attendance.setTotalHours(8.5);
                 attendance.setStatus(i % 3 == 0 ? AttendanceStatus.LATE : AttendanceStatus.PRESENT);
+                attendance.setEmployee(employee);
+                attendanceRepository.save(attendance);
+            }
+        }
+    }
+
+    private void backfillAbsent(List<Employee> employees) {
+        if (employees.isEmpty()) {
+            return;
+        }
+        LocalDate today = LocalDate.now();
+        for (int day = 1; day <= 14; day++) {
+            LocalDate date = today.minusDays(day);
+            DayOfWeek dow = date.getDayOfWeek();
+            if (dow == DayOfWeek.SATURDAY || dow == DayOfWeek.SUNDAY) {
+                continue;
+            }
+            for (Employee employee : employees) {
+                if (attendanceRepository.existsByEmployeeIdAndDate(employee.getId(), date)) {
+                    continue;
+                }
+                Attendance attendance = new Attendance();
+                attendance.setDate(date);
+                attendance.setCheckIn(null);
+                attendance.setCheckOut(null);
+                attendance.setTotalHours(null);
+                attendance.setStatus(AttendanceStatus.ABSENT);
                 attendance.setEmployee(employee);
                 attendanceRepository.save(attendance);
             }

@@ -4,7 +4,8 @@ public enum AttendanceStatus {
     PRESENT,
     INCOMPLETE,
     LATE,
-    HALF_DAY
+    HALF_DAY,
+    ABSENT
 
 //    /**
 //     * Converts database string value to enum.

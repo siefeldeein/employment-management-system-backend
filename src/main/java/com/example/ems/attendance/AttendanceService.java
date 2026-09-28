@@ -9,5 +9,9 @@ public interface AttendanceService {
 
     Page<AttendanceResponse> searchAttendance(AttendanceSearchReq req, Pageable pageable);
 
+    AttendanceResponse checkIn(Long employeeId);
+
+    AttendanceResponse checkOut(Long employeeId);
+
 
 }

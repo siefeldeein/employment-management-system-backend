@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,5 +24,15 @@ public class AttendanceController {
             @RequestBody AttendanceSearchReq req, Pageable pageable){
 
         return ResponseEntity.ok(attendanceService.searchAttendance(req, pageable));
+    }
+
+    @PostMapping("/check-in")
+    public ResponseEntity<AttendanceResponse> checkIn(@RequestParam Long employeeId){
+        return ResponseEntity.ok(attendanceService.checkIn(employeeId));
+    }
+
+    @PostMapping("/check-out")
+    public ResponseEntity<AttendanceResponse> checkOut(@RequestParam Long employeeId){
+        return ResponseEntity.ok(attendanceService.checkOut(employeeId));
     }
 }
