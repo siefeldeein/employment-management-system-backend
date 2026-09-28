@@ -29,12 +29,20 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (roleRepository.count() > 0) {
+        if (roleRepository.count() == 0) {
+            List<Department> departments = seedRolesAndDepartments();
+            List<Employee> employees = seedEmployees(departments);
+            seedAttendance(employees);
             return;
         }
-        List<Department> departments = seedRolesAndDepartments();
-        List<Employee> employees = seedEmployees(departments);
-        seedAttendance(employees);
+        // Roles already exist (existing/local DB): top up demo attendance
+        // when the table is empty so the Attendance page has data to show.
+        if (attendanceRepository.count() == 0) {
+            List<Employee> employees = employeeRepository.findAll();
+            if (!employees.isEmpty()) {
+                seedAttendance(employees);
+            }
+        }
     }
 
     private List<Department> seedRolesAndDepartments() {
