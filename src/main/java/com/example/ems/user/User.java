@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", unique = true)
     private Employee employee;
 
     @ManyToMany(fetch = FetchType.EAGER)
