@@ -40,22 +40,28 @@ public class AttendanceServiceImp implements AttendanceService{
     @Transactional(readOnly = true)
     public Page<AttendanceResponse> searchAttendance(AttendanceSearchReq req, Pageable pageable){
 
+        // The controller accepts a missing body (required = false), so normalise
+        // null to an empty filter set - otherwise req.employeeId() below NPEs.
+        AttendanceSearchReq criteria = (req == null)
+                ? new AttendanceSearchReq(null, null, null, null, null)
+                : req;
+
         // NOTE: build an empty filter list and combine with allOf().
         // Specification.where(null) is FORBIDDEN in Spring Data JPA 4
         // and throws "Specification must not be null".
         List<Specification<Attendance>> filters = new ArrayList<>();
-        if(req.employeeId()!=null){
-            filters.add(AttendanceSpecification.hasEmployeeId(req.employeeId()));
+        if(criteria.employeeId()!=null){
+            filters.add(AttendanceSpecification.hasEmployeeId(criteria.employeeId()));
         }
 
-        if(req.departmentId()!=null){
-            filters.add(AttendanceSpecification.hasDepartmentId(req.departmentId()));
+        if(criteria.departmentId()!=null){
+            filters.add(AttendanceSpecification.hasDepartmentId(criteria.departmentId()));
         }
-        if(req.status()!=null){
-            filters.add(AttendanceSpecification.hasStatus(req.status()));
+        if(criteria.status()!=null){
+            filters.add(AttendanceSpecification.hasStatus(criteria.status()));
         }
-        if(req.startDate()!=null && req.endDate()!=null){
-            filters.add(AttendanceSpecification.dateBetween(req.startDate(), req.endDate()));
+        if(criteria.startDate()!=null && criteria.endDate()!=null){
+            filters.add(AttendanceSpecification.dateBetween(criteria.startDate(), criteria.endDate()));
         }
 
         Specification<Attendance> spec = Specification.allOf(filters);
