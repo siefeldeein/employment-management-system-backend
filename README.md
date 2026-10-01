@@ -16,13 +16,18 @@ REST API for an employee management system: employees, departments, attendance, 
 
 ## Features
 
-- **Authentication** — register + login issuing JWTs (`/api/auth/register`, `/api/auth/login`)
-- **Role-based access** — `ROLE_ADMIN`, `ROLE_MANAGER`, `ROLE_EMPLOYEE` via `@PreAuthorize`; department writes are ADMIN-only
+- **Authentication** — register + login issuing JWTs, plus `GET /api/auth/me` to restore the session on reload
+- **Role-based access** — `ROLE_ADMIN`, `ROLE_MANAGER`, `ROLE_EMPLOYEE` enforced with `@PreAuthorize`; employee and department features are manager-only, employees get `GET /api/attendance/me` and self-scoped clock-in/out
 - **Employees** — paginated list, name search, create / update (PATCH) / delete
-- **Departments** — paginated list, ADMIN CRUD, employees-by-department view (nested DTO)
-- **Attendance** — flexible search with multiple filters using JPA Specifications (`POST /api/attendance/search`, paginated)
-- **Robust error handling** — `@RestControllerAdvice` returning consistent `ErrorResponse` bodies (404 / 409 / 400 + validation errors)
+- **Departments** — paginated list, create / update / delete, employees-by-department view (nested DTO)
+- **Attendance** — check-in / check-out with automatic status calculation, flexible search using JPA Specifications, and a self-service endpoint for employees
+- **Robust error handling** — `@RestControllerAdvice` returning consistent `ErrorResponse` bodies (400 / 401 / 403 / 404 / 409)
 - **Layered architecture** — Controller → Service → Repository, with MapStruct DTO mappers
+
+## Documentation
+
+Full code-level walkthrough of every flow: [`docs/`](docs/) — start with
+[`docs/00-README.md`](docs/00-README.md).
 
 ## Project Structure
 
@@ -51,30 +56,32 @@ GRANT ALL PRIVILEGES ON employee_management_system.* TO 'springstudent'@'localho
 
 Tables are created automatically at startup (`ddl-auto: update`).
 
-### 2. Seed the roles
-
-```sql
-INSERT INTO roles (id, name) VALUES
-  (1, 'ROLE_ADMIN'),
-  (2, 'ROLE_MANAGER'),
-  (3, 'ROLE_EMPLOYEE');
-```
-
-### 3. Start the API
+### 2. Start the API
 
 ```bash
 ./mvnw spring-boot:run    # or: mvn spring-boot:run
 ```
 
-Runs on `http://localhost:8080`. DB credentials, JWT secret and token expiry are in `src/main/resources/application.yaml`.
+Runs on `http://localhost:8080`. DB credentials, JWT secret and token expiry are in
+`src/main/resources/application.yaml`.
 
-### 4. Register & login
+On the first run `DataSeeder` inserts the three roles (`ROLE_ADMIN`,
+`ROLE_MANAGER`, `ROLE_EMPLOYEE`), three departments, five employees, and two
+weeks of attendance rows. Do **not** insert the roles by hand before starting —
+the seeder only seeds when the `roles` table is empty, and inserting rows first
+would make it skip the departments and employees.
+
+### 3. Create an account
+
+The seeder creates no user accounts, and registration always produces
+`ROLE_EMPLOYEE`. To reach the manager-only screens, register first, then promote
+that account in the database:
 
 ```bash
-# Register (new users get ROLE_EMPLOYEE)
+# Register (new users get ROLE_EMPLOYEE); the email must match a seeded employee
 curl -X POST http://localhost:8080/api/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"username":"jane","password":"secret123","email":"jane@example.com"}'
+  -d '{"username":"jane","password":"secret123","email":"jane.smith@example.com"}'
 
 # Login → returns { "token": "..." }
 curl -X POST http://localhost:8080/api/auth/login \
@@ -88,25 +95,61 @@ Send the token on secured requests:
 Authorization: Bearer <token>
 ```
 
+To reach the manager-only screens, promote the account in the database, then log
+out and back in (roles are re-read from the database on every request, but the
+frontend needs a fresh `GET /api/auth/me`):
+
+```sql
+USE employee_management_system;
+INSERT INTO users_roles (user_id, role_id)
+SELECT u.id, r.id FROM users u, roles r
+WHERE u.username = 'jane' AND r.name = 'ROLE_MANAGER';
+```
+
 ## API Overview
 
 | Method | Endpoint | Description | Access |
 | --- | --- | --- | --- |
-| POST | `/api/auth/register` | Create a user | public |
+| POST | `/api/auth/register` | Create a user (always `ROLE_EMPLOYEE`) | public |
 | POST | `/api/auth/login` | Login, returns JWT | public |
-| GET | `/api/employees/paged?page=&size=` | Paginated employees | auth |
-| GET | `/api/employees/search?name=` | Search by name | auth |
-| GET | `/api/employees/{id}` | Get one employee | auth |
-| POST | `/api/employees` | Create employee | auth |
-| PATCH | `/api/employees/{id}` | Update employee | auth |
-| DELETE | `/api/employees/{id}` | Delete employee | auth |
-| GET | `/api/departments/paginated?page=&size=` | Paginated departments | auth |
-| GET | `/api/departments/{id}/employees` | Department with its employees | auth |
-| POST | `/api/departments` | Create department | **ADMIN** |
-| PUT | `/api/departments/{id}` | Update department | **ADMIN** |
-| DELETE | `/api/departments/{id}` | Delete department | **ADMIN** |
-| POST | `/api/attendance/search` | Attendance search (filters + paging) | auth |
+| GET | `/api/auth/me` | Current username, email, roles, employeeId | authenticated |
+| GET | `/api/employees` | All employees | **A/M** |
+| GET | `/api/employees/paged?page=&size=` | Paginated employees | **A/M** |
+| GET | `/api/employees/search?name=` | Search by name | **A/M** |
+| GET | `/api/employees/{id}` | Get one employee | **A/M** |
+| POST | `/api/employees` | Create employee | **A/M** |
+| PATCH | `/api/employees/{id}` | Update employee | **A/M** |
+| DELETE | `/api/employees/{id}` | Delete employee | **A/M** |
+| GET | `/api/departments` | All departments | **A/M** |
+| GET | `/api/departments/paginated?page=&size=` | Paginated departments | **A/M** |
+| GET | `/api/departments/{id}` | Get one department | **A/M** |
+| GET | `/api/departments/{id}/employees` | Department with its employees | **A/M** |
+| POST | `/api/departments` | Create department | **A/M** |
+| PUT | `/api/departments/{id}` | Update department | **A/M** |
+| DELETE | `/api/departments/{id}` | Delete department | **A/M** |
+| POST | `/api/attendance/search` | Attendance search (filters + paging) | **A/M** |
+| GET | `/api/attendance/me` | Own attendance only | **EMPLOYEE** |
+| POST | `/api/attendance/check-in?employeeId=` | Check in (employees: own id only) | **A/M** any, **EMPLOYEE** self |
+| POST | `/api/attendance/check-out?employeeId=` | Check out (employees: own id only) | **A/M** any, **EMPLOYEE** self |
 
-Errors are returned as: `{ "message": "...", "timestamp": "..." }`.
+**A/M** = `ROLE_ADMIN` or `ROLE_MANAGER`.
 
-> **Development note:** while the React frontend is being built, authentication is temporarily relaxed (`anyRequest().permitAll()` + method security commented out in `SecurityConfig`). The JWT filter, roles and `@PreAuthorize` rules are fully implemented and will be re-enabled by uncommenting those two lines.
+Errors are returned as:
+
+```json
+{
+  "status": 400,
+  "message": "Validation failed: 1 error(s)",
+  "timeStamp": "2026-01-15T10:22:31.482",
+  "path": "/api/auth/register",
+  "errors": { "password": "Password size must be minimum of 6" }
+}
+```
+
+> **Note:** authentication is fully enabled — `anyRequest().authenticated()` plus
+> `@EnableMethodSecurity` and the `@PreAuthorize` rules above. The `DataSeeder`
+> creates roles, departments, employees and attendance, but **no user accounts**,
+> so on a fresh database you must create one yourself: register (which always
+> yields `ROLE_EMPLOYEE`) and then promote the account with
+> `INSERT INTO users_roles (user_id, role_id) SELECT u.id, r.id FROM users u, roles r WHERE u.username = '...' AND r.name = 'ROLE_MANAGER';`.
+> See [`docs/08-errors-and-glossary.md`](docs/08-errors-and-glossary.md) section 5.

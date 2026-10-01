@@ -1,0 +1,21 @@
+{
+  "name": "ems-docs-pdf",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Renders the EMS Markdown documentation into styled A4 PDFs.",
+  "scripts": {
+    "build": "node build-pdf.mjs",
+    "verify": "node verify-toc.mjs",
+    "qa": "node qa.mjs",
+    "scan": "node scan-secrets.mjs",
+    "check": "node build-pdf.mjs && node verify-toc.mjs && node qa.mjs && node scan-secrets.mjs"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "marked": "^16.4.1",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "4.10.38",
+    "puppeteer-core": "^24.10.2"
+  }
+}

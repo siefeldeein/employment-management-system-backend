@@ -1,0 +1,555 @@
+{
+  "generated": "2026-10-01T23:25:30.838Z",
+  "documents": [
+    {
+      "key": "00-README",
+      "title": "EMS Documentation Index",
+      "subject": "Index and glossary",
+      "bytes": 430397,
+      "toc": [
+        {
+          "text": "1. What the application is",
+          "page": 3
+        },
+        {
+          "text": "2. Document reading order",
+          "page": 3
+        },
+        {
+          "text": "3. The words you must know first",
+          "page": 4
+        },
+        {
+          "text": "4. Repository layout",
+          "page": 5
+        },
+        {
+          "text": "5. The three roles of every backend class",
+          "page": 6
+        },
+        {
+          "text": "6. The PDF edition",
+          "page": 6
+        },
+        {
+          "text": "7. How to verify anything you read here",
+          "page": 7
+        }
+      ],
+      "pages": 7
+    },
+    {
+      "key": "01-foundations",
+      "title": "Foundations",
+      "subject": "Architecture and configuration",
+      "bytes": 771471,
+      "toc": [
+        {
+          "text": "1. The backend layers",
+          "page": 3
+        },
+        {
+          "text": "2. One HTTP request, end to end",
+          "page": 4
+        },
+        {
+          "text": "3. Dependency injection, Lombok, and why there are no new keywords",
+          "page": 5
+        },
+        {
+          "text": "4. The database schema",
+          "page": 6
+        },
+        {
+          "text": "5. Why FetchType.LAZY everywhere",
+          "page": 7
+        },
+        {
+          "text": "6. pom.xml - what each dependency is for",
+          "page": 8
+        },
+        {
+          "text": "7. application.yaml",
+          "page": 8
+        },
+        {
+          "text": "8. What happens on startup",
+          "page": 9
+        },
+        {
+          "text": "9. @Transactional in plain language",
+          "page": 10
+        },
+        {
+          "text": "10. Pagination and Specifications",
+          "page": 11
+        },
+        {
+          "text": "11. Mappers (MapStruct)",
+          "page": 11
+        }
+      ],
+      "pages": 11
+    },
+    {
+      "key": "02-authentication",
+      "title": "Authentication",
+      "subject": "Login, register, session, logout",
+      "bytes": 1019565,
+      "toc": [
+        {
+          "text": "1. The mental model",
+          "page": 3
+        },
+        {
+          "text": "2. The pieces",
+          "page": 3
+        },
+        {
+          "text": "3. User is both a database row and a Spring Security object",
+          "page": 4
+        },
+        {
+          "text": "4. JwtService - creating and reading tokens",
+          "page": 5
+        },
+        {
+          "text": "5. JwtAuthenticationFilter - the most important class to explain",
+          "page": 6
+        },
+        {
+          "text": "6. The two repository queries",
+          "page": 7
+        },
+        {
+          "text": "7. Flow A - Log in",
+          "page": 8
+        },
+        {
+          "text": "8. Flow B - Register",
+          "page": 9
+        },
+        {
+          "text": "9. Flow C - Restore the session on reload (\"who am I?\")",
+          "page": 11
+        },
+        {
+          "text": "10. Flow D - Log out",
+          "page": 12
+        },
+        {
+          "text": "11. Frontend storage details worth explaining",
+          "page": 13
+        },
+        {
+          "text": "12. Full auth endpoint summary",
+          "page": 14
+        }
+      ],
+      "pages": 14
+    },
+    {
+      "key": "03-employees",
+      "title": "Employees",
+      "subject": "Employee management flows",
+      "bytes": 958547,
+      "toc": [
+        {
+          "text": "1. The files",
+          "page": 3
+        },
+        {
+          "text": "2. The security decision",
+          "page": 3
+        },
+        {
+          "text": "3. DTOs and why there are three of them",
+          "page": 4
+        },
+        {
+          "text": "4. The mapper",
+          "page": 5
+        },
+        {
+          "text": "5. Flow A - Browse the employee list (paginated)",
+          "page": 6
+        },
+        {
+          "text": "6. Flow B - Search by name",
+          "page": 7
+        },
+        {
+          "text": "7. Flow C - Create an employee",
+          "page": 8
+        },
+        {
+          "text": "8. Flow D - Edit an employee",
+          "page": 10
+        },
+        {
+          "text": "9. Flow E - Delete an employee",
+          "page": 11
+        },
+        {
+          "text": "10. GET /api/employees and GET /api/employees/{id}",
+          "page": 12
+        },
+        {
+          "text": "11. Employee endpoint summary",
+          "page": 12
+        }
+      ],
+      "pages": 13
+    },
+    {
+      "key": "04-departments",
+      "title": "Departments",
+      "subject": "Department management flows",
+      "bytes": 609018,
+      "toc": [
+        {
+          "text": "1. The files",
+          "page": 3
+        },
+        {
+          "text": "2. Why reads are restricted here too",
+          "page": 3
+        },
+        {
+          "text": "3. DTO differences you should notice",
+          "page": 4
+        },
+        {
+          "text": "4. Flow A - List departments (paginated)",
+          "page": 4
+        },
+        {
+          "text": "5. Flow B - Create a department",
+          "page": 5
+        },
+        {
+          "text": "6. Flow C - Update a department",
+          "page": 6
+        },
+        {
+          "text": "7. Flow D - Delete a department (and the guard rule)",
+          "page": 6
+        },
+        {
+          "text": "8. Flow E - View a department with its employees",
+          "page": 7
+        },
+        {
+          "text": "9. How a department is referenced from employees",
+          "page": 8
+        },
+        {
+          "text": "10. Department endpoint summary",
+          "page": 8
+        }
+      ],
+      "pages": 9
+    },
+    {
+      "key": "05-attendance",
+      "title": "Attendance",
+      "subject": "Attendance flows and status rules",
+      "bytes": 1039407,
+      "toc": [
+        {
+          "text": "1. The domain in one picture",
+          "page": 3
+        },
+        {
+          "text": "2. The status enum",
+          "page": 3
+        },
+        {
+          "text": "3. DTOs are Java records",
+          "page": 4
+        },
+        {
+          "text": "4. Flow A - Check in",
+          "page": 4
+        },
+        {
+          "text": "5. Flow B - Check out",
+          "page": 7
+        },
+        {
+          "text": "6. Flow C - Manager search",
+          "page": 8
+        },
+        {
+          "text": "7. AttendanceSpecification - the Criteria API",
+          "page": 10
+        },
+        {
+          "text": "8. Flow D - An employee's own records (/me)",
+          "page": 10
+        },
+        {
+          "text": "9. The mapper",
+          "page": 11
+        },
+        {
+          "text": "10. AttendancePage - the whole page in one place",
+          "page": 12
+        },
+        {
+          "text": "11. How attendance history gets created without anyone clocking in",
+          "page": 13
+        },
+        {
+          "text": "12. Attendance endpoint summary",
+          "page": 13
+        }
+      ],
+      "pages": 14
+    },
+    {
+      "key": "06-frontend",
+      "title": "The Frontend",
+      "subject": "React architecture",
+      "bytes": 962256,
+      "toc": [
+        {
+          "text": "1. Stack and versions",
+          "page": 3
+        },
+        {
+          "text": "2. Bootstrap: index.html -> main.jsx -> App.jsx",
+          "page": 3
+        },
+        {
+          "text": "3. Routing (App.jsx)",
+          "page": 4
+        },
+        {
+          "text": "4. RequireAuth - the three states",
+          "page": 5
+        },
+        {
+          "text": "5. authStore - the session",
+          "page": 6
+        },
+        {
+          "text": "6. uiStore - everything cosmetic",
+          "page": 6
+        },
+        {
+          "text": "7. usePermissions - roles to a boolean",
+          "page": 7
+        },
+        {
+          "text": "8. api/http.js - the single network boundary",
+          "page": 8
+        },
+        {
+          "text": "9. TanStack Query - how server state is handled",
+          "page": 9
+        },
+        {
+          "text": "10. Layout - the shell",
+          "page": 10
+        },
+        {
+          "text": "11. Pages in detail",
+          "page": 11
+        },
+        {
+          "text": "12. Modals",
+          "page": 12
+        },
+        {
+          "text": "13. Tailwind conventions",
+          "page": 13
+        },
+        {
+          "text": "14. Dev proxy and deployment",
+          "page": 13
+        },
+        {
+          "text": "15. Linting and building",
+          "page": 14
+        }
+      ],
+      "pages": 14
+    },
+    {
+      "key": "07-security-model",
+      "title": "The Security Model",
+      "subject": "Authorization rules",
+      "bytes": 532826,
+      "toc": [
+        {
+          "text": "1. The three roles",
+          "page": 3
+        },
+        {
+          "text": "2. Where roles come from",
+          "page": 3
+        },
+        {
+          "text": "3. The two layers of enforcement",
+          "page": 4
+        },
+        {
+          "text": "4. Complete endpoint permission matrix",
+          "page": 4
+        },
+        {
+          "text": "5. The ownership check in full",
+          "page": 6
+        },
+        {
+          "text": "6. Token handling: what is strong and what is not",
+          "page": 6
+        },
+        {
+          "text": "7. Error responses are safe by design",
+          "page": 7
+        },
+        {
+          "text": "8. How the frontend mirrors the model",
+          "page": 8
+        },
+        {
+          "text": "9. What to say if asked \"is this app secure?\"",
+          "page": 8
+        }
+      ],
+      "pages": 8
+    },
+    {
+      "key": "08-errors-and-glossary",
+      "title": "Errors, Flows, Glossary",
+      "subject": "Error handling and reference",
+      "bytes": 710999,
+      "toc": [
+        {
+          "text": "1. ErrorResponse - one shape for every failure",
+          "page": 3
+        },
+        {
+          "text": "2. The handler table",
+          "page": 3
+        },
+        {
+          "text": "3. The 21 endpoints, grouped into 18 flows",
+          "page": 5
+        },
+        {
+          "text": "4. Where every status code comes from",
+          "page": 6
+        },
+        {
+          "text": "5. Known gaps, in priority order",
+          "page": 7
+        },
+        {
+          "text": "6. Glossary",
+          "page": 9
+        },
+        {
+          "text": "7. Where to go next",
+          "page": 10
+        }
+      ],
+      "pages": 11
+    },
+    {
+      "key": "09-round-trip-traces",
+      "title": "End-to-End Round Trips",
+      "subject": "Full request and response traces",
+      "bytes": 1690767,
+      "toc": [
+        {
+          "text": "1. How to read a trace",
+          "page": 3
+        },
+        {
+          "text": "2. Trace 1 - Log in",
+          "page": 4
+        },
+        {
+          "text": "3. Trace 2 - Register",
+          "page": 6
+        },
+        {
+          "text": "4. Trace 3 - Session restore on reload",
+          "page": 7
+        },
+        {
+          "text": "5. Trace 4 - Log out",
+          "page": 8
+        },
+        {
+          "text": "6. Trace 5 - Browse the employee list",
+          "page": 9
+        },
+        {
+          "text": "7. Trace 6 - Search employees by name",
+          "page": 10
+        },
+        {
+          "text": "8. Trace 7 - Create an employee",
+          "page": 11
+        },
+        {
+          "text": "9. Trace 8 - Update an employee",
+          "page": 12
+        },
+        {
+          "text": "10. Trace 9 - Delete an employee",
+          "page": 13
+        },
+        {
+          "text": "11. Trace 10 - Browse departments",
+          "page": 14
+        },
+        {
+          "text": "12. Trace 11 - Create / update / delete a department",
+          "page": 14
+        },
+        {
+          "text": "13. Trace 12 - View a department with its employees",
+          "page": 15
+        },
+        {
+          "text": "14. Trace 13 - Check in",
+          "page": 16
+        },
+        {
+          "text": "15. Trace 14 - Check out",
+          "page": 18
+        },
+        {
+          "text": "16. Trace 15 - Manager searches attendance",
+          "page": 19
+        },
+        {
+          "text": "17. Trace 16 - An employee views their own attendance",
+          "page": 20
+        },
+        {
+          "text": "18. Trace 17 - The dashboard",
+          "page": 22
+        },
+        {
+          "text": "19. Trace 18 - A request that is refused",
+          "page": 23
+        },
+        {
+          "text": "20. Every trace at a glance",
+          "page": 24
+        },
+        {
+          "text": "21. The five questions to ask about any flow",
+          "page": 24
+        }
+      ],
+      "pages": 25
+    }
+  ]
+}
