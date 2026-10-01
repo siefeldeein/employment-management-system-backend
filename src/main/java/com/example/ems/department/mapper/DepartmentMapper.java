@@ -16,16 +16,11 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 public interface DepartmentMapper {
 
-//    @Mapping(target = "employeeList", ignore = true)
     Department toEntity(DepartmentCreateReq req);
 
-//    @Mapping(target = "employeeList", ignore = true)
     void updateDepartment(DepartmentUpdateReq updateReq, @MappingTarget Department department);
 
     DepartmentResponse toDtoResponse(Department department);
 
     DepartmentDetailsResponse toDtoResponseDetails(Department department);
-
-
-
 }

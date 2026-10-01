@@ -12,7 +12,4 @@ public interface AuthService {
     String generateToken(UserDetails userDetails);
 
     CurrentUserResponse getCurrentUser(String username);
-
-//    AuthResponse register(RegisterRequest registerRequest);
-
 }

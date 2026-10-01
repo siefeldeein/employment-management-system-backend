@@ -16,11 +16,4 @@ public class RoleServiceImp implements RoleService {
         .orElseThrow(() ->
         new ResourceNotFoundException("ROLE_EMPLOYEE not found"));
     }
-
-    @Override
-    public Role getRoleByName(String name) {
-        return roleRepository.findByName(name)
-        .orElseThrow(() ->
-        new ResourceNotFoundException("Role not found: " + name));
-    }
 }

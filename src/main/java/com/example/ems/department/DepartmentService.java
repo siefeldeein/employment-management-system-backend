@@ -17,7 +17,6 @@ public interface DepartmentService {
     //Read
     DepartmentResponse getDepartmentById(Long id);
     DepartmentDetailsResponse getDepartmentByIdWithEmployees(Long id);
-    DepartmentResponse getDepartmentByName(String name);
 
 
     List<DepartmentResponse> getAllDepartments();

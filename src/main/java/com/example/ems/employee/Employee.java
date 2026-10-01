@@ -2,7 +2,6 @@ package com.example.ems.employee;
 
 import com.example.ems.attendance.Attendance;
 import com.example.ems.department.Department;
-import com.example.ems.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,13 +45,6 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Attendance> attendanceList = new ArrayList<>();
-
-    @OneToOne(mappedBy = "employee")
-    private User user;
-
-//    // === ADD THIS FOR SEARCHABLE FULL NAME ===
-//    @Formula("CONCAT(first_name, ' ', last_name)")
-//    private String fullName;
 
     public String getFullName(){
         return firstName +" "+ lastName;

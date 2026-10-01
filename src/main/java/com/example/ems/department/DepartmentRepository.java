@@ -17,8 +17,4 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
             "LEFT JOIN FETCH d.employeeList e " +
             "WHERE d.id = :id")
     Optional<Department> findWithEmployeesById(@Param("id") Long id);
-
-
-//    boolean existsById(Long id);
-
 }

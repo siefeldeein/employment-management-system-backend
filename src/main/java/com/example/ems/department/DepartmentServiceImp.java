@@ -60,15 +60,6 @@ public class DepartmentServiceImp implements DepartmentService {
     }
 
     @Override
-    public DepartmentResponse getDepartmentByName(String name) {
-
-        Department returnedDepartment = departmentRepository.findByNameIgnoreCase(name).orElseThrow(
-        ()-> new ResourceNotFoundException("This Department name "+ name + "doesn't exists"));
-
-        return departmentMapper.toDtoResponse(returnedDepartment);
-    }
-
-    @Override
     public List<DepartmentResponse> getAllDepartments() {
 
         List<Department> departmentList = departmentRepository.findAll();
