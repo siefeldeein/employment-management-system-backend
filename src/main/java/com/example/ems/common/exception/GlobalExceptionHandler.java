@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -72,6 +73,13 @@ public class GlobalExceptionHandler {
             msg += ": " + ex.getRootCause().getMessage();
         }
         return buildResponse(HttpStatus.CONFLICT, msg, request, null);
+    }
+
+    // 403 - Method security denial (@PreAuthorize): authenticated but insufficient role
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request){
+
+        return buildResponse(HttpStatus.FORBIDDEN, "Forbidden: insufficient permissions", request, null);
     }
 
     // 500 - Fallback for Unexpected Errors (NEVER expose stack traces!)

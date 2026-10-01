@@ -19,15 +19,16 @@ import java.util.List;
 @RestController
 @RequestMapping("api/departments")
 // Security model:
-// - READ (GET): Public or authenticated users
-// - WRITE (POST/PUT/DELETE): ADMIN only
+// - ALL endpoints (READ + WRITE): ADMIN or MANAGER only
+// Employees have no department access because DepartmentDetailsResponse
+// exposes EmployeeBrief.salary to anyone who can reach it.
+@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 public class DepartmentController {
 
     // 1️⃣ DEPENDENCIES (top of class)
     private final DepartmentService departmentService;
 
     // 2️⃣ CREATE METHOD
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<DepartmentResponse> createDepartment(@Valid @RequestBody DepartmentCreateReq createReq){
         DepartmentResponse departmentResponse = departmentService.createDepartment(createReq);
@@ -36,7 +37,6 @@ public class DepartmentController {
     }
 
     // 3️⃣ READ METHODS GROUP
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<DepartmentResponse>> getAllDepartments(){
         List<DepartmentResponse> departmentResponses = departmentService.getAllDepartments();
@@ -47,7 +47,6 @@ public class DepartmentController {
         Page<DepartmentResponse> departmentResponse = departmentService.getAllDepartments(pageable);
         return ResponseEntity.ok(departmentResponse);
     }
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentResponse> getDepartmentById(@PathVariable Long id){
         DepartmentResponse departmentResponse = departmentService.getDepartmentById(id);
@@ -60,7 +59,6 @@ public class DepartmentController {
     }
 
     // 4️⃣ UPDATE METHOD
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<DepartmentResponse> updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentUpdateReq updateReq){
        DepartmentResponse departmentResponse = departmentService.updateDepartment(id, updateReq);
@@ -68,7 +66,6 @@ public class DepartmentController {
     }
 
     // 5️⃣ DELETE METHOD
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Long id){
         departmentService.deleteDepartment(id);

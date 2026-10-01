@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
+// Security model: the whole employee directory is ADMIN/MANAGER only, reads included.
+// An employee must never enumerate other staff or read their salary.
+@PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
